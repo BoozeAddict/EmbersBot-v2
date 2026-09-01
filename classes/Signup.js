@@ -326,7 +326,17 @@ class Signup {
 
         this.eventDate = Math.floor(target.getTime() / 1000);
     }    
+    #checkIfMessageExists() {
+        if (this.signupMessageId === 0 || this.channelId === 0) {
+            return false;
+        }
+        return true;
+    }
     async #updateSignupMessage(interaction = null) {
+        if (!this.#checkIfMessageExists()) {
+            console.error('Signup message ID or channel ID is not set. Cannot update signup message.');
+            return;
+        }
         if (!interaction && !this.message) await this.#getMessage();
         const payload = await this.#generateSignupEmbed();
         console.log(`Attempting to edit message: ${this.message.id}`);
