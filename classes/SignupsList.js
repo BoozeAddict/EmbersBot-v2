@@ -14,12 +14,16 @@ class SignupsList {
         this.signups_gvg = [this.gvg_saturday, this.gvg_sunday];
     }
 
-    postHRSignups(channel) {
-        this.signups_hr.forEach(signup => signup.createSignupMessage(channel));
+    async postHRSignups(channel) {
+        for (const signup of this.signups_hr) {
+            await signup.createSignupMessage(channel);
+        }
     }
 
-    postGVGSignups(channel) {
-        this.signups_gvg.forEach(signup => signup.createSignupMessage(channel));
+    async postGVGSignups(channel) {
+        for (const signup of this.signups_gvg) {
+            await signup.createSignupMessage(channel);
+        }
     }
 
     getSignupById(signupId) {
@@ -61,9 +65,17 @@ class SignupsList {
     async sendReminders() {
         const textGvG = '@GvG Happy reset! Don\'t forget to sign up for the next week\'s GvG matches!';
         const channelGvG = this.#getGvGChannel();
+        if (!channelGvG) {
+            console.error("GvG channel not found");
+            return;
+        }
 
         const textHR = '@LFPvE Happy reset! Don\'t forget to sign up for the next week\'s Hero Realms!';
         const channelHR = this.#getHrChannel();
+        if (!channelHR) {
+            console.error("HR channel not found");
+            return;
+        }
         await Promise.allSettled([
             this.#deleteLastMessage(channelGvG, textGvG),
             this.#deleteLastMessage(channelHR, textHR),

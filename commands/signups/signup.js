@@ -1,6 +1,7 @@
 const { 
 	SlashCommandBuilder,
     MessageFlags,
+    PermissionFlagsBits,
  } = require('discord.js');
 
 //const Signup = require('#classes/Signup');
@@ -8,22 +9,22 @@ const signupsList = require('#classes/SignupsList');
 
 
 
- function createHRSignupMessage(channel) {
+ async function createHRSignupMessage(channel) {
 	//const signupsList = new SignupsList();
-	signupsList.postHRSignups(channel);
+	await signupsList.postHRSignups(channel);
 }
 
-function createGVGSignupMessage(channel) {
+async function createGVGSignupMessage(channel) {
 	//const signupsList = new SignupsList();
-	signupsList.postGVGSignups(channel);
+	await signupsList.postGVGSignups(channel);
 }
 
 async function createSignupMessage(type, channel) {
   switch (type) {
 	case 'hr':
-		return createHRSignupMessage(channel);
+		return await createHRSignupMessage(channel);
 	case 'gvg':
-		return createGVGSignupMessage(channel);
+		return await createGVGSignupMessage(channel);
 	default:
 		return 'Creating a new signup!';
   }
@@ -32,6 +33,7 @@ async function createSignupMessage(type, channel) {
 module.exports = {
 	data: new SlashCommandBuilder().setName('signup')
 	.setDescription('Create a new signup!')
+	.setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
 	.addStringOption(option => 
 		option.setName('type')
 		.setDescription('The type of signup to create')
@@ -44,6 +46,12 @@ module.exports = {
 
 	async execute(interaction) {
 		if (!interaction.isChatInputCommand()) return;
+		if (!interaction.memberPermissions?.has(PermissionFlagsBits.KickMembers)) {
+			return interaction.reply({
+				content: 'You do not have permission to create signups.',
+				flags: MessageFlags.Ephemeral
+			});
+		}
 		await interaction.reply({
 			content: `Creating a new ${interaction.options.getString('type')} signup!`,
 			flags: MessageFlags.Ephemeral
