@@ -1,0 +1,1 @@
+node --env-file=.env deploy-commands.js
