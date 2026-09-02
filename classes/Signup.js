@@ -1,8 +1,9 @@
-const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, TextDisplayBuilder, MessageFlags, SeparatorBuilder, SeparatorSpacingSize, MediaGalleryBuilder, ContainerBuilder } = require('discord.js');
+const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, TextDisplayBuilder, MessageFlags, 
+    SeparatorBuilder, SeparatorSpacingSize, MediaGalleryBuilder, AttachmentBuilder, ContainerBuilder } = require('discord.js');
 const path = require('path');
 const fs = require('fs');
 const client = require('#classes/Client');
-//const generateHrPng = require('#utility/generateHtml');
+const generateSignupPng = require('#utility/generateSignupImage');
 
 class Signup {
     constructor(eventType, day) {
@@ -68,47 +69,23 @@ class Signup {
         }
     }
     async #generateHRSignupEmbed() {
-        const field_time = {
-            name: 'Start time',
-            value: `<t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`,
-            inline: false
-        };
+    const textDisplay = new TextDisplayBuilder()
+    .setContent(`# **<:Embers:1527406753657131099> ${this.day} Hero Realm Signup <:Embers:1527406753657131099>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
 
-        // Convert user id list to nickname list
-        const listDpsUsernames = await getNicknameListByIdList(this.listDps);
-        const field_dps = {
-            name: `⚔️ DPS (${this.listDps.length}/8)`,
-            value: (this.listDps.length > 0 ? listDpsUsernames.join('\n') : 'No signups yet'),
-            inline: true
-        };
-        
-        const listHealersUsernames = await getNicknameListByIdList(this.listHealers);
-        const Field_healers = {
-            name: `➕ Healers (${this.listHealers.length}/2)`,
-            value: (this.listHealers.length > 0 ? listHealersUsernames.join('\n') : 'No signups yet'),
-            inline: true
-        };
+    const separator = new SeparatorBuilder()
+    .setDivider(true)
+    .setSpacing(SeparatorSpacingSize.Large);
 
-        const listBenchUsernames = await getNicknameListByIdList(this.listBench);
-        const field_bench = {
-            name: `🪑 Bench (${this.listBench.length})`,
-            value: listBenchUsernames.join('\n'),
-            inline: true
-        };
+    const pngBuffer = await generateSignupPng(this);
+    const attachment = new AttachmentBuilder(pngBuffer, { name: 'image.png' });
 
-        const fields = [field_time,field_dps, Field_healers];
-        if (this.listBench.length > 0) {
-            fields.push(field_bench);
-        }
-
-    const embed = new EmbedBuilder()
-	.setColor(0xA42821)
-	.setTitle(`<:Embers:1473400384252018709> ${this.day} Hero Realm Signup <:Embers:1473400384252018709>`)
-	.addFields(fields);
-
-	const selectMenu = new StringSelectMenuBuilder()
+    const mediaGallery = new MediaGalleryBuilder().addItems(
+        (mediaGalleryItem) => mediaGalleryItem.setURL('attachment://image.png')
+    );
+    
+    const selectMenu = new StringSelectMenuBuilder()
 	.setCustomId(`signup-${this.eventType}-${this.day}`)
-	.setPlaceholder('Select your role...')
+	.setPlaceholder(`Sign up for ${this.day}...`)
 	.addOptions(
 		{
 			label: 'DPS',
@@ -132,129 +109,98 @@ class Signup {
 		}
 	);
 
-	const row = new ActionRowBuilder()
-	.addComponents(selectMenu);
+    const row = new ActionRowBuilder()
+    .addComponents(selectMenu);
+
+    const container = new ContainerBuilder()
+    .setAccentColor(0xFF7A2E)
+    .addTextDisplayComponents(textDisplay)
+    .addSeparatorComponents(separator)
+    .addMediaGalleryComponents(mediaGallery)
+    .addActionRowComponents(row);
 
     const payload = {
-        embeds: [embed],
-        components: [row]
+        components:  [
+            container,
+        ],
+        files: [attachment],
+        flags: MessageFlags.IsComponentsV2,
     };
 
 	return payload;
 }
     async #generateGVGSignupEmbed() {
-        
-        const field_time = {
-            name: 'Start time',
-            value: `<t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`,
-            inline: false
-        };
+    const textDisplay = new TextDisplayBuilder()
+    .setContent(`# **<:Embers:1527406753657131099> ${this.day} Guild War Signup <:Embers:1527406753657131099>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
 
-        // Convert user id list to nickname list
-        const listDpsUsernames = await getNicknameListByIdList(this.listDps);
-        const field_dps = {
-            name: `⚔️ DPS (${this.listDps.length})`,
-            value: (this.listDps.length > 0 ? listDpsUsernames.join('\n') : 'No signups yet'),
-            inline: true
-        };
-        
-        const listHealersUsernames = await getNicknameListByIdList(this.listHealers);
-        const field_healers = {
-            name: `➕ Healers (${this.listHealers.length})`,
-            value: (this.listHealers.length > 0 ? listHealersUsernames.join('\n') : 'No signups yet'),
-            inline: true
-        };
+    const separator = new SeparatorBuilder()
+    .setDivider(true)
+    .setSpacing(SeparatorSpacingSize.Large);
 
-        const listTanksUsernames = await getNicknameListByIdList(this.listTanks);
-        const field_tanks = {
-            name: `🛡️ Tanks (${this.listTanks.length})`,
-            value: (this.listTanks.length > 0 ? listTanksUsernames.join('\n') : 'No signups yet'),
-            inline: true
-        };
+    const pngBuffer = await generateSignupPng(this);
+    const attachment = new AttachmentBuilder(pngBuffer, { name: 'image.png' });
 
-        const listBenchUsernames = await getNicknameListByIdList(this.listBench);
-        const field_bench = {
-            name: `🪑 Bench (${this.listBench.length})`,
-            value: listBenchUsernames.join(', '),
-        };
-
-        
-        const listLateUsernames = await getNicknameListByIdList(this.listLate);
-        const field_late = {
-            name: `🕗 Late (${this.listLate.length})`,
-            value: listLateUsernames.join(', '),
+    const mediaGallery = new MediaGalleryBuilder().addItems(
+        (mediaGalleryItem) => mediaGalleryItem.setURL('attachment://image.png')
+    );
+    
+    const selectMenu = new StringSelectMenuBuilder()
+        .setCustomId(`signup-${this.eventType}-${this.day}`)
+        .setPlaceholder(`Sign up for ${this.day} Guild War...`)
+        .addOptions(
+        {
+            label: 'DPS',
+            value: 'dps',
+            emoji: { name: '⚔️' }
+        },
+        {
+            label: 'Tank',
+            value: 'tank',
+            emoji: { name: '🛡️' }
+        },
+        {
+            label: 'Healer',
+            value: 'healer',
+            emoji: { name: '➕' }
+        },
+        {
+            label: 'Bench',
+            value: 'bench',
+            emoji: { name: '🪑' }
+        },
+        {
+            label: 'Late',
+            value: 'late',
+            emoji: { name: '🕗' }
+        },
+        {
+            label: 'Absent',
+            value: 'absent',
+            emoji: { name: '⛔' }
+        },
+        {
+            label: 'Remove Signup',
+            value: 'remove',
+            emoji: { name: '❌' }
         }
+    );
 
-        const listAbsentUsernames = await getNicknameListByIdList(this.listAbsent);
-        const field_absent = {
-            name: `❌ Absent (${this.listAbsent.length})`,
-            value: listAbsentUsernames.join(', '),
-        }
+    const row = new ActionRowBuilder()
+    .addComponents(selectMenu);
 
-
-        const fields = [field_time, field_dps, field_tanks, field_healers];
-        if (this.listBench.length > 0) {
-            fields.push(field_bench);
-        }
-        if (this.listLate.length > 0) {
-            fields.push(field_late);
-        }
-        if (this.listAbsent.length > 0) {
-            fields.push(field_absent);
-        }
-
-    const embed = new EmbedBuilder()
-	.setColor(0xA42821)
-	.setTitle(`<:Embers:1473400384252018709> ${this.day} GvG Signup <:Embers:1473400384252018709>`)
-	.addFields(fields);
-
-	const selectMenu = new StringSelectMenuBuilder()
-	.setCustomId(`signup-${this.eventType}-${this.day}`)
-	.setPlaceholder('Select your role...')
-	.addOptions(
-		{
-			label: 'DPS',
-			value: 'dps',
-			emoji: { name: '⚔️' }
-		},
-		{
-			label: 'Tank',
-			value: 'tank',
-			emoji: { name: '🛡️' }
-		},
-		{
-			label: 'Healer',
-			value: 'healer',
-			emoji: { name: '➕' }
-		},
-		{
-			label: 'Bench',
-			value: 'bench',
-			emoji: { name: '🪑' }
-		},
-		{
-			label: 'Late',
-			value: 'late',
-			emoji: { name: '🕗' }
-		},
-		{
-			label: 'Absent',
-			value: 'absent',
-			emoji: { name: '❌' }
-		},
-		{
-			label: 'Remove Signup',
-			value: 'remove',
-			emoji: { name: '❌' }
-		}
-	);
-
-	const row = new ActionRowBuilder()
-	.addComponents(selectMenu);
+    const container = new ContainerBuilder()
+    .setAccentColor(0xFF7A2E)
+    .addTextDisplayComponents(textDisplay)
+    .addSeparatorComponents(separator)
+    .addMediaGalleryComponents(mediaGallery)
+    .addActionRowComponents(row);
 
     const payload = {
-        embeds: [embed],
-        components: [row]
+        components:  [
+            container,
+        ],
+        files: [attachment],
+        flags: MessageFlags.IsComponentsV2,
     };
 
 	return payload;
@@ -431,24 +377,25 @@ class Signup {
         };
         fs.writeFileSync(`data/data_${this.eventType}_${this.day}.json`, JSON.stringify(data));
     }
-}
+    async getNicknameListByIdList(userIds)
+    {
+        const guild = client.guilds.cache.get(process.env.GUILD_ID);
+        const fetchPromises = userIds.map(async (id) => {
+        try {
+        const member = guild.members.cache.get(id) 
+            ?? await guild.members.fetch(id);
+        
+        return member.displayName;
+        } catch (error) {
+        return `Unknown User (${id})`; 
+        }
+    });
 
-async function getNicknameListByIdList(userIds)
-{
-    const guild = client.guilds.cache.get(process.env.GUILD_ID);
-    const fetchPromises = userIds.map(async (id) => {
-    try {
-      const member = guild.members.cache.get(id) 
-        ?? await guild.members.fetch(id);
-      
-      return member.displayName;
-    } catch (error) {
-      return `Unknown User (${id})`; 
+    const displayNames = await Promise.all(fetchPromises);
+    return displayNames;
     }
-  });
-
-  const displayNames = await Promise.all(fetchPromises);
-  return displayNames;
 }
+
+
 
 module.exports = Signup;

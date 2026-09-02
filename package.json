@@ -6,6 +6,7 @@
   "imports": {
     "#classes/*": "./classes/*.js",
     "#events/*": "./events/*.js",
-    "#handlers/*": "./handlers/*.js"
+    "#handlers/*": "./handlers/*.js",
+    "#utility/*": "./utility/*.js"
   }
 }

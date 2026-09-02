@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Raid Signup — Cinderfall Descent</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700;900&family=Inter:wght@400;500;600;700&display=swap');
+
+  :root{
+    --void:      #170d0a;
+    --char:      #241410;
+    --ember:     #ff7a2e;
+    --ember-dim: #b8461c;
+    --gold:      #f2b545;
+    --ash:       #5a4038;
+    --ash-line:  #3c2620;
+    --parchment: #f3e2cf;
+    --parchment-dim: #c9ab92;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    background: var(--void);
+  }
+
+  body {
+    display: flex;
+    justify-content: center;
+    padding: 40px 20px;
+    font-family: 'Inter', sans-serif;
+  }
+
+  .sheet {
+    width: 760px;
+    background:
+      radial-gradient(ellipse 900px 500px at 50% -10%, rgba(255,122,46,0.20), transparent 60%),
+      linear-gradient(180deg, #1d1109 0%, #170d0a 55%, #120a07 100%);
+    border: 1px solid var(--ash-line);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .sheet::before{
+    content: "";
+    position: absolute;
+    inset: 0;
+    background:
+      repeating-linear-gradient(115deg, rgba(255,122,46,0.035) 0px, rgba(255,122,46,0.035) 2px, transparent 2px, transparent 60px);
+    pointer-events: none;
+  }
+
+  /* ---------- Header ---------- */
+  .header {
+    position: relative;
+    padding: 46px 52px 34px;
+    border-bottom: 1px solid var(--ash-line);
+  }
+
+  .eyebrow {
+    font-size: 13px;
+    letter-spacing: 0.03em;
+    color: var(--ember);
+    font-weight: 600;
+  }
+
+  h1 {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 46px;
+    line-height: 1.05;
+    color: var(--parchment);
+    margin-top: 10px;
+    text-shadow: 0 0 28px rgba(255,122,46,0.35);
+  }
+
+  .meta-row {
+    display: flex;
+    gap: 28px;
+    margin-top: 18px;
+  }
+
+  .meta {
+    font-size: 14px;
+    color: var(--parchment-dim);
+  }
+
+  .meta strong {
+    color: var(--gold);
+    font-weight: 600;
+  }
+
+  .flame-rule {
+    height: 3px;
+    margin-top: 26px;
+    background: linear-gradient(90deg, var(--ember-dim), var(--ember) 30%, var(--gold) 55%, var(--ember) 80%, transparent);
+    border-radius: 2px;
+  }
+
+  /* ---------- Body ---------- */
+  .body {
+    padding: 40px 52px 48px;
+    position: relative;
+  }
+
+  .section {
+    margin-bottom: 36px;
+  }
+
+  .section:last-child { margin-bottom: 0; }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 21px;
+    color: var(--parchment);
+  }
+
+  .section-title .accent-dps { color: var(--ember); }
+  .section-title .accent-heal { color: #6fd3c7; }
+  .section-title .accent-bench { color: var(--parchment-dim); }
+
+  .section-count {
+    font-size: 13px;
+    color: var(--parchment-dim);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Slot grid */
+  .slots {
+    display: grid;
+    gap: 10px;
+  }
+
+  .slots.dps { grid-template-columns: repeat(2, 1fr); }
+  .slots.heal { grid-template-columns: repeat(2, 1fr); }
+  .slots.bench { grid-template-columns: repeat(3, 1fr); }
+
+  .slot {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--ash-line);
+    border-left: 3px solid var(--ash);
+  }
+
+  .slots.dps .slot { border-left-color: var(--ember-dim); }
+  .slots.heal .slot { border-left-color: #2f7a70; }
+  .slots.bench .slot {
+    border-left-color: var(--ash);
+    border-style: dashed;
+    padding: 10px 14px;
+  }
+
+  .slot-num {
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 13px;
+    color: var(--parchment-dim);
+    width: 18px;
+    flex-shrink: 0;
+  }
+
+  .slot-name {
+    font-size: 14px;
+    color: var(--parchment-dim);
+    font-style: italic;
+    opacity: 0.55;
+  }
+
+  /* Footer */
+  .footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ash-line);
+    display: flex;
+    justify-content: space-between;
+    font-size: 12px;
+    color: var(--ash);
+    letter-spacing: 0.02em;
+  }
+</style>
+</head>
+<body>
+
+  <div class="sheet">
+    <div class="header">
+      <div class="eyebrow">Raid Signup</div>
+      <h1>Hero Realm Roster</h1>
+      <div class="flame-rule"></div>
+    </div>
+
+    <div class="body">
+
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title"><span class="accent-dps">DPS</span></div>
+          <div class="section-count">0 / 8 filled</div>
+        </div>
+        <div class="slots dps">
+          <div class="slot"><span class="slot-num">01</span><span class="slot-name">open</span></div>
+          <div class="slot"><span class="slot-num">02</span><span class="slot-name">open</span></div>
+          <div class="slot"><span class="slot-num">03</span><span class="slot-name">open</span></div>
+          <div class="slot"><span class="slot-num">04</span><span class="slot-name">open</span></div>
+          <div class="slot"><span class="slot-num">05</span><span class="slot-name">open</span></div>
+          <div class="slot"><span class="slot-num">06</span><span class="slot-name">open</span></div>
+          <div class="slot"><span class="slot-num">07</span><span class="slot-name">open</span></div>
+          <div class="slot"><span class="slot-num">08</span><span class="slot-name">open</span></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title"><span class="accent-heal">Healer</span></div>
+          <div class="section-count">0 / 2 filled</div>
+        </div>
+        <div class="slots heal">
+          <div class="slot"><span class="slot-num">01</span><span class="slot-name">open</span></div>
+          <div class="slot"><span class="slot-num">02</span><span class="slot-name">open</span></div>
+        </div>
+      </div>
+
+      <!-- START BENCH -->
+      <div class="section">
+        <div class="section-head">
+          <div class="section-title"><span class="accent-bench">Bench</span></div>
+          <div class="section-count">reserves</div>
+        </div>
+        <div class="slots bench">
+          <div class="slot"><span class="slot-num">01</span><span class="slot-name">open</span></div>
+        </div>
+      </div>
+      <!-- END BENCH -->
+
+      <div class="footer">
+        <span>Use the buttons below to claim a slot</span>
+        <span>{{$DAY}} Hero Realm · Raid Roster</span>
+      </div>
+    </div>
+  </div>
+
+</body>
+</html>
