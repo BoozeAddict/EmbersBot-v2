@@ -279,6 +279,7 @@ class Signup {
         return true;
     }
     async #updateSignupMessage(interaction = null) {
+        if (interaction) await interaction.deferUpdate();
         if (!this.#checkIfMessageExists()) {
             console.error('Signup message ID or channel ID is not set. Cannot update signup message.');
             return;
