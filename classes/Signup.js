@@ -70,7 +70,7 @@ class Signup {
     }
     async #generateHRSignupEmbed() {
     const textDisplay = new TextDisplayBuilder()
-    .setContent(`# **<:Embers:1527406753657131099> ${this.day} Hero Realm Signup <:Embers:1527406753657131099>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
+    .setContent(`# **<:Embers:1473400384252018709> ${this.day} Hero Realm Signup <:Embers:1473400384252018709>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
 
     const separator = new SeparatorBuilder()
     .setDivider(true)
@@ -131,7 +131,7 @@ class Signup {
 }
     async #generateGVGSignupEmbed() {
     const textDisplay = new TextDisplayBuilder()
-    .setContent(`# **<:Embers:1527406753657131099> ${this.day} Guild War Signup <:Embers:1527406753657131099>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
+    .setContent(`# **<:Embers:1473400384252018709> ${this.day} Guild War Signup <:Embers:1473400384252018709>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
 
     const separator = new SeparatorBuilder()
     .setDivider(true)
