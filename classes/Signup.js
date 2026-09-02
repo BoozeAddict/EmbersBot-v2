@@ -289,7 +289,7 @@ class Signup {
         console.log(`Attempting to edit message: ${this.message.id}`);
         try {
             if (interaction)
-                await interaction.update(payload);
+                await interaction.editReply(payload);
             else
                 await this.message.edit(payload);
         } catch (error) {
