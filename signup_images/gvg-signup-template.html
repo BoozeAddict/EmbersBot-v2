@@ -11,10 +11,12 @@
     --ember:     #ff7a2e;
     --ember-dim: #b8461c;
     --gold:      #f2b545;
-    --tank:      #d94848;
-    --tank-dim:  #7a2222;
-    --heal:      #6fd3c7;
-    --heal-dim:  #2f7a70;
+    --tank:      #c7ab80;
+    --tank-dim:  #a0865d;
+    --heal:      #9be694;
+    --heal-dim:  #6fb96b;
+    --dps:       #65afdf;
+    --dps-dim:   #3184b2;
     --ash:       #5a4038;
     --ash-line:  #3c2620;
     --parchment: #f3e2cf;
@@ -115,16 +117,26 @@
     justify-content: space-between;
     margin-bottom: 14px;
   }
+  
+  .section-icon {
+    width: 22px;
+    height: 22px;
+    object-fit: contain;
+    flex-shrink: 0;
+  }
 
   .section-title {
     font-family: 'Cinzel', serif;
     font-weight: 700;
-    font-size: 19px;
+    font-size: 21px;
     color: var(--parchment);
+    display: flex;
+    align-items: center;
+    gap: 10px;
   }
   .accent-tank  { color: var(--tank); }
   .accent-heal  { color: var(--heal); }
-  .accent-dps   { color: var(--ember); }
+  .accent-dps   { color: var(--dps); }
   .accent-bench { color: var(--parchment-dim); }
   .accent-absent{ color: #8a7268; }
   .accent-late  { color: var(--gold); }
@@ -152,7 +164,7 @@
 
   .slots.tank .slot  { border-left-color: var(--tank-dim); }
   .slots.heal .slot  { border-left-color: var(--heal-dim); }
-  .slots.dps .slot   { border-left-color: var(--ember-dim); }
+  .slots.dps .slot   { border-left-color: var(--dps-dim); }
   .slots.bench .slot { border-left-color: var(--ash); border-style: dashed; }
   .slots.absent .slot{ border-left-color: #4a3a34; border-style: dashed; opacity: 0.75; }
   .slots.late .slot  { border-left-color: var(--gold); border-style: dashed; }
@@ -167,11 +179,15 @@
   }
 
   .slot-name {
-    font-size: 13px;
+    font-size: 16px;
     color: var(--parchment-dim);
     font-style: italic;
     opacity: 0.55;
   }
+
+  .slot-name.dps { font-style: normal; opacity: 1; color: var(--dps); }
+  .slot-name.heal { font-style: normal; opacity: 1; color: var(--heal); }
+  .slot-name.tank { font-style: normal; opacity: 1; color: var(--tank); }
 
   .overflow-row { grid-template-columns: repeat(6, 1fr); }
 
@@ -201,7 +217,7 @@
 
       <div class="section">
         <div class="section-head">
-          <div class="section-title"><span class="accent-tank">Tanks</span></div>
+          <div class="section-title"><img class="section-icon" src="./images/icon_tank.webp" alt=""><span class="accent-tank">Tanks</span></div>
           <div class="section-count">0 / 4 filled</div>
         </div>
         <div class="slots four tank">
@@ -214,7 +230,7 @@
 
       <div class="section">
         <div class="section-head">
-          <div class="section-title"><span class="accent-heal">Healers</span></div>
+          <div class="section-title"><img class="section-icon" src="./images/icon_heal.webp" alt=""><span class="accent-heal">Healers</span></div>
           <div class="section-count">0 / 6 filled</div>
         </div>
         <div class="slots three heal">
@@ -229,7 +245,7 @@
 
       <div class="section">
         <div class="section-head">
-          <div class="section-title"><span class="accent-dps">DPS</span></div>
+          <div class="section-title"><img class="section-icon" src="./images/icon_dps.webp" alt=""><span class="accent-dps">DPS</span></div>
           <div class="section-count">0 / 20 filled</div>
         </div>
         <div class="slots four dps">

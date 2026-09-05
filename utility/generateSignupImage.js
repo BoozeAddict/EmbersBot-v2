@@ -4,6 +4,25 @@ const { chromium } = require("playwright");
 
 const Signup = require('#classes/Signup');
 
+const imageCache = new Map();
+
+const ICON_DPS = toDataUri(path.join(__dirname, '..', 'signup_images', 'images', 'icon_dps.webp'));
+const ICON_HEAL = toDataUri(path.join(__dirname, '..', 'signup_images', 'images', 'icon_heal.webp'));
+const ICON_TANK = toDataUri(path.join(__dirname, '..', 'signup_images', 'images', 'icon_tank.webp'));
+
+
+function toDataUri(fullPath) {
+  if (imageCache.has(fullPath)) return imageCache.get(fullPath);
+
+  const mimeTypes = { png: 'image/png', jpg: 'image/jpeg', jpeg: 'image/jpeg', webp: 'image/webp', svg: 'image/svg+xml', gif: 'image/gif' };
+  const ext = path.extname(fullPath).slice(1).toLowerCase();
+  const data = fs.readFileSync(fullPath).toString('base64');
+  const uri = `data:${mimeTypes[ext] || 'application/octet-stream'};base64,${data}`;
+
+  imageCache.set(fullPath, uri);
+  return uri;
+}
+
 function fillSection(html, sectionClass, names) {
   const pattern = new RegExp(
     `(<div class="slots.+${sectionClass}">)([\\s\\S]*?)(</div>\\s*</div>)`
@@ -18,8 +37,8 @@ function fillSection(html, sectionClass, names) {
       const name = names[i - 1];
       if (name) {
         slot = slot.replace(
-          '<span class="slot-name">open</span>',
-          `<span class="slot-name" style="font-style:normal;opacity:1;color:var(--parchment)">${name}</span>`
+          `<span class="slot-name">open</span>`,
+          `<span class="slot-name ${sectionClass}">${name}</span>`
         );
       }
       filled.push('<div class="slot">' + slot);
@@ -31,13 +50,13 @@ function fillSection(html, sectionClass, names) {
 
 function fillBenchSection(html, names) {
   const pattern = new RegExp(
-    `(<div class="slots bench">)([\\s\\S]*?)(</div>\\s*</div>)`
+    `(<div class="slots.+bench">)([\\s\\S]*?)(</div>\\s*</div>)`
   );
   let innerText = '';
 
   for (let i = 0; i < names.length; i++) {
     const name = names[i];
-    innerText += `<div class="slot"><span class="slot-num">${String(i + 1).padStart(2, '0')}</span><span class="slot-name" style="font-style:normal;opacity:1;color:var(--parchment)">${name}</span></div>\n`;
+    innerText += `<div class="slot"><span class="slot-num">${String(i + 1).padStart(2, '0')}</span><span class="slot-name">${name}</span></div>\n`;
   }
   html = html.replace(pattern, `$1${innerText}$3`);
   return html;
@@ -51,7 +70,7 @@ function fillLateSection(html, names) {
 
   for (let i = 0; i < names.length; i++) {
     const name = names[i];
-    innerText += `<div class="slot"><span class="slot-num">${String(i + 1).padStart(2, '0')}</span><span class="slot-name" style="font-style:normal;opacity:1;color:var(--parchment)">${name}</span></div>\n`;
+    innerText += `<div class="slot"><span class="slot-num">${String(i + 1).padStart(2, '0')}</span><span class="slot-name">${name}</span></div>\n`;
   }
   html = html.replace(pattern, `$1${innerText}$3`);
   return html;
@@ -65,7 +84,8 @@ function fillAbsentSection(html, names) {
 
   for (let i = 0; i < names.length; i++) {
     const name = names[i];
-    innerText += `<div class="slot"><span class="slot-num">${String(i + 1).padStart(2, '0')}</span><span class="slot-name" style="font-style:normal;opacity:1;color:var(--parchment)">${name}</span></div>\n`;
+    
+    innerText += `<div class="slot"><span class="slot-num">${String(i + 1).padStart(2, '0')}</span><span class="slot-name">${name}</span></div>\n`;
   }
   html = html.replace(pattern, `$1${innerText}$3`);
   return html;
@@ -73,7 +93,7 @@ function fillAbsentSection(html, names) {
 
 function updateCount(html, sectionClass, filled, total) {
   const pattern = new RegExp(
-    `\\d+ / ${total} filled(</div>\\s*</div>\\s*<div class="slots ${sectionClass}">)`
+    `\\d+ / ${total} filled(</div>\\s*</div>\\s*<div class="slots.+${sectionClass}">)`
   );
   return html.replace(pattern, `${filled} / ${total} filled$1`);
 }
@@ -115,7 +135,15 @@ function removeExtraSections(html) {
 }
 
 function replaceDay(html, day) {
-  return html.replace(/\{\{\$DAY\}\}/g, day);
+  return html.replace('{{$DAY}}', day);
+}
+
+
+function replaceIcons(html) {
+  return html
+    .replace('./images/icon_dps.webp', ICON_DPS)
+    .replace('./images/icon_heal.webp', ICON_HEAL)
+    .replace('./images/icon_tank.webp', ICON_TANK)
 }
 
 /**
@@ -162,10 +190,11 @@ async function GenerateGvgPng(signup) {
         html = fillAbsentSection(html, absentNames);
       }
     }
-
-    html = updateCount(html, "dps", signup.listDps.length, 8);
-    html = updateCount(html, "heal", signup.listHealers.length, 2);
+    html = updateCount(html, "tank", signup.listTanks.length, 4);
+    html = updateCount(html, "heal", signup.listHealers.length, 6);
+    html = updateCount(html, "dps", signup.listDps.length, 20);
     html = replaceDay(html, signup.day);
+    html = replaceIcons(html);
     return await htmlToPng(html);
 }
 
@@ -195,6 +224,8 @@ async function GenerateHrPng(signup) {
     html = updateCount(html, "dps", signup.listDps.length, 8);
     html = updateCount(html, "heal", signup.listHealers.length, 2);
     html = replaceDay(html, signup.day);
+    html = replaceIcons(html);
+
     return await htmlToPng(html);
 }
 
@@ -221,15 +252,10 @@ async function htmlToPng(htmlString) {
     viewport: { width: 1200, height: 1000 },
   });
 
-  await page.setContent(htmlString, { waitUntil: "domcontentloaded" });
-  const pngBuffer = await page.locator('.sheet').screenshot({ type: 'png', fullPage: true });
-
-  /*
-  const pngBuffer = await page.screenshot({
-    type: "png",
-    fullPage: true
+  await page.setContent(htmlString, { 
+    waitUntil: "domcontentloaded",
   });
-  */
+  const pngBuffer = await page.locator('.sheet').screenshot({ type: 'png', fullPage: true });
 
   await browser.close();
   return pngBuffer;

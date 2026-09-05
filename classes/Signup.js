@@ -70,7 +70,7 @@ class Signup {
     }
     async #generateHRSignupEmbed() {
     const textDisplay = new TextDisplayBuilder()
-    .setContent(`# **<:Embers:1473400384252018709> ${this.day} Hero Realm Signup <:Embers:1473400384252018709>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
+    .setContent(`# **<:Embers:1527406753657131099> ${this.day} Hero Realm Signup <:Embers:1527406753657131099>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
 
     const separator = new SeparatorBuilder()
     .setDivider(true)
@@ -90,12 +90,16 @@ class Signup {
 		{
 			label: 'DPS',
 			value: 'dps',
-			emoji: { name: '⚔️' }
+            emoji: { name: 'DPS',
+                    id: '1545668631109570570'
+             }
 		},
 		{
 			label: 'Healer',
 			value: 'healer',
-			emoji: { name: '➕' }
+            emoji: { name: 'Healer',
+                    id: '1545668653297573939'
+             }
 		},
 		{
 			label: 'Bench',
@@ -131,7 +135,7 @@ class Signup {
 }
     async #generateGVGSignupEmbed() {
     const textDisplay = new TextDisplayBuilder()
-    .setContent(`# **<:Embers:1473400384252018709> ${this.day} Guild War Signup <:Embers:1473400384252018709>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
+    .setContent(`# **<:Embers:1527406753657131099> ${this.day} Guild War Signup <:Embers:1527406753657131099>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
 
     const separator = new SeparatorBuilder()
     .setDivider(true)
@@ -149,19 +153,25 @@ class Signup {
         .setPlaceholder(`Sign up for ${this.day} Guild War...`)
         .addOptions(
         {
-            label: 'DPS',
-            value: 'dps',
-            emoji: { name: '⚔️' }
-        },
-        {
             label: 'Tank',
             value: 'tank',
-            emoji: { name: '🛡️' }
+            emoji: { name: 'Tank',
+                    id: '1545668595713974337'
+             }
         },
         {
             label: 'Healer',
             value: 'healer',
-            emoji: { name: '➕' }
+            emoji: { name: 'Healer',
+                    id: '1545668653297573939'
+             }
+        },
+        {
+            label: 'DPS',
+            value: 'dps',
+            emoji: { name: 'DPS',
+                    id: '1545668631109570570'
+             }
         },
         {
             label: 'Bench',
