@@ -1,11 +1,9 @@
-const { 
+import {
 	SlashCommandBuilder,
-    MessageFlags,
-    PermissionFlagsBits,
- } = require('discord.js');
-
-//const Signup = require('#classes/Signup');
-const signupsList = require('#classes/SignupsList');
+	MessageFlags,
+	PermissionFlagsBits,
+} from 'discord.js';
+import signupsList from '#classes/SignupsList';
 
 
 
@@ -30,7 +28,7 @@ async function createSignupMessage(type, channel) {
   }
 }
 
-module.exports = {
+export default {
 	data: new SlashCommandBuilder().setName('signup')
 	.setDescription('Create a new signup!')
 	.setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)

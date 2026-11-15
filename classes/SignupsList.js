@@ -1,12 +1,11 @@
-const Signup = require('#classes/Signup');
-const client = require('#classes/Client');
-const fs = require('fs');
+import Signup from '#classes/Signup';
+import client from '#classes/Client';
 
 class SignupsList {
     constructor() {
         this.hr_monday = new Signup('hr', 'Monday');
         this.hr_wednesday = new Signup('hr', 'Wednesday');
-        this.hr_friday = new Signup('hr', 'Friday');
+        this.hr_friday = new Signup('skyward', 'Friday');
         this.gvg_saturday = new Signup('gvg', 'Saturday');
         this.gvg_sunday = new Signup('gvg', 'Sunday');
         this.signups = [this.hr_monday, this.hr_wednesday, this.hr_friday, this.gvg_saturday, this.gvg_sunday];
@@ -63,14 +62,14 @@ class SignupsList {
     }
 
     async sendReminders() {
-        const textGvG = '@GvG Happy reset! Don\'t forget to sign up for the next week\'s GvG matches!';
+        const textGvG = '<@1467184947583520943> Happy reset! Don\'t forget to sign up for the next week\'s GvG matches!';
         const channelGvG = this.#getGvGChannel();
         if (!channelGvG) {
             console.error("GvG channel not found");
             return;
         }
 
-        const textHR = '@LFPvE Happy reset! Don\'t forget to sign up for the next week\'s Hero Realms!';
+        const textHR = '<@1502033270810869952> <@1467185646773993603> Happy reset! Don\'t forget to sign up for the next week\'s Hero Realms!';
         const channelHR = this.#getHrChannel();
         if (!channelHR) {
             console.error("HR channel not found");
@@ -91,4 +90,4 @@ class SignupsList {
 
 const signupsList = new SignupsList();
 
-module.exports = signupsList;
+export default signupsList;

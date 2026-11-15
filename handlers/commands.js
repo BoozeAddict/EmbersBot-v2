@@ -1,4 +1,4 @@
-module.exports = async function handleCommands(interaction) {
+export default async function handleCommands(interaction) {
     const command = interaction.client.commands.get(
         interaction.commandName
     );
@@ -15,4 +15,4 @@ module.exports = async function handleCommands(interaction) {
     } catch (error) {
         console.error(error);
     }
-};
+}

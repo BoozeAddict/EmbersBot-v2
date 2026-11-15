@@ -1,8 +1,6 @@
-const path = require('node:path');
-const signupsList = require('#classes/SignupsList');
-//const Signup = require('#classes/Signup');
+import signupsList from '#classes/SignupsList';
 
-module.exports = async function handleSelectMenus(interaction) {
+export default async function handleSelectMenus(interaction) {
     if (interaction.customId.startsWith('signup')) {
         handleSignupMessage(interaction);
     }

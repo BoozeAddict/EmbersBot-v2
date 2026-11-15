@@ -1,12 +1,20 @@
 {
+  "name": "EmbersBot",
+  "version": "2.0.0",
+  "description": "Emberrrrrrrrs!",
+  "main": "index.js",
+  "type": "module",
   "dependencies": {
     "discord.js": "^14.27.0",
+    "gifwrap": "^0.10.1",
+    "jimp": "^0.22.12",
     "playwright": "^1.62.1"
   },
   "imports": {
     "#classes/*": "./classes/*.js",
     "#events/*": "./events/*.js",
     "#handlers/*": "./handlers/*.js",
-    "#utility/*": "./utility/*.js"
+    "#utility/*": "./utility/*.js",
+    "#database/*": "./database/*.js"
   }
 }

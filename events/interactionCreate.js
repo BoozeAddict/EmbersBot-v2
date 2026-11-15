@@ -1,8 +1,8 @@
-const { Events } = require('discord.js');
-const handleCommands = require('#handlers/commands');
-const handleSelectMenus = require('#handlers/selectMenus');
+import { Events } from 'discord.js';
+import handleCommands from '#handlers/commands';
+import handleSelectMenus from '#handlers/selectMenus';
 
-module.exports = {
+export default {
     name: Events.InteractionCreate,
 
     async execute(interaction) {

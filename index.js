@@ -7,15 +7,19 @@ if (!TOKEN || !CLIENT_ID || !GUILD_ID) {
     process.exit(1);
 }
 
-const fs = require('node:fs');
-const path = require('node:path');
-const { Client, Collection, Events, GatewayIntentBits, MessageFlags } = require('discord.js');
+import { Collection, Events } from 'discord.js';
+import fs from 'node:fs';
+import path from 'node:path';
+import { fileURLToPath, pathToFileURL } from 'node:url';
 
+import interactionCreate from '#events/interactionCreate';
+import { checkForResets, checkForResetsTimer } from '#events/botTimer';
 
-const interactionCreate = require('#events/interactionCreate');
-const { checkForResets, checkForResetsTimer } = require('#events/botTimer');
+import client from '#classes/Client';
 
-const client = require('#classes/Client');
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 client.login(TOKEN);
 
 client.once(Events.ClientReady, async (readyClient) => {
@@ -34,7 +38,8 @@ for (const folder of commandFolders) {
 	const commandFiles = fs.readdirSync(commandsPath).filter((file) => file.endsWith('.js'));
 	for (const file of commandFiles) {
 		const filePath = path.join(commandsPath, file);
-		const command = require(filePath);
+		const loadedCommand = await import(pathToFileURL(filePath).href);
+		const command = loadedCommand.default ?? loadedCommand;
 		// Set a new item in the Collection with the key as the command name and the value as the exported module
 		if ('data' in command && 'execute' in command) {
 			client.commands.set(command.data.name, command);

@@ -1,4 +1,4 @@
-const { Client, GatewayIntentBits } = require('discord.js');
+import { Client, GatewayIntentBits } from 'discord.js';
 
 const client = new Client({
     intents: [
@@ -7,4 +7,4 @@ const client = new Client({
     ],
 });
 
-module.exports = client;
+export default client;

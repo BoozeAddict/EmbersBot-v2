@@ -1,9 +1,22 @@
-const { EmbedBuilder, ActionRowBuilder, StringSelectMenuBuilder, TextDisplayBuilder, MessageFlags, 
-    SeparatorBuilder, SeparatorSpacingSize, MediaGalleryBuilder, AttachmentBuilder, ContainerBuilder } = require('discord.js');
-const path = require('path');
-const fs = require('fs');
-const client = require('#classes/Client');
-const generateSignupPng = require('#utility/generateSignupImage');
+import {
+    ActionRowBuilder,
+    StringSelectMenuBuilder,
+    TextDisplayBuilder,
+    MessageFlags,
+    SeparatorBuilder,
+    SeparatorSpacingSize,
+    MediaGalleryBuilder,
+    AttachmentBuilder,
+    ContainerBuilder,
+} from 'discord.js';
+import path from 'node:path';
+import fs from 'node:fs';
+import { fileURLToPath } from 'node:url';
+import client from '#classes/Client';
+import generateSignupPng from '#utility/generateSignupImage';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 class Signup {
     constructor(eventType, day) {
@@ -133,6 +146,35 @@ class Signup {
 
 	return payload;
 }
+    async #generateSkywardSignupEmbed() {
+    const textDisplay = new TextDisplayBuilder()
+    .setContent(`# **<:Embers:1527406753657131099> Skyward Bond <:Embers:1527406753657131099>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
+
+    const separator = new SeparatorBuilder()
+    .setDivider(true)
+    .setSpacing(SeparatorSpacingSize.Large);
+    
+    const textDisplay2 = new TextDisplayBuilder()
+    .setContent(`We will be gathering a team to run Skyward Bond at the stated time. Please hop to the game if you are interested in joining.\n` +
+                `Priority will be given to the highest DPS players, we really need all the damage we can squeeze in.\n\n` +
+                `If you're not a lean mean damage machine yet, remember, we have a master class program, where you can freely ask questions about various builds, gearing tips and more!\n` +
+                `Head off to <#1483451476213760122> if you are interested.`);
+
+    const container = new ContainerBuilder()
+    .setAccentColor(0xFF7A2E)
+    .addTextDisplayComponents(textDisplay)
+    .addSeparatorComponents(separator)
+    .addTextDisplayComponents(textDisplay2);
+
+    const payload = {
+        components:  [
+            container,
+        ],
+        flags: MessageFlags.IsComponentsV2,
+    };
+
+	return payload;
+}
     async #generateGVGSignupEmbed() {
     const textDisplay = new TextDisplayBuilder()
     .setContent(`# **<:Embers:1527406753657131099> ${this.day} Guild War Signup <:Embers:1527406753657131099>**\n\nStart time: <t:${this.eventDate}:F> (<t:${this.eventDate}:R>)`);
@@ -221,6 +263,8 @@ class Signup {
                 return await this.#generateHRSignupEmbed();
             case 'gvg':
                 return await this.#generateGVGSignupEmbed();
+            case 'skyward':
+                return await this.#generateSkywardSignupEmbed();
         }
     }
     #removePlayer(player) {
@@ -243,7 +287,7 @@ class Signup {
         const schedule = {
             Monday:    [17, 30],
             Wednesday: [17, 30],
-            Friday:    [19, 30],
+            Friday:    [17, 30],
             Saturday:  [18, 30],
             Sunday:    [18, 30],
             Reset:     [21,  0]
@@ -409,4 +453,4 @@ class Signup {
 
 
 
-module.exports = Signup;
+export default Signup;
